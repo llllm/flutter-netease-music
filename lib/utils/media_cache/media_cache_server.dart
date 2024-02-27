@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:mixin_logger/mixin_logger.dart';
-
+import '../log.dart';
 import '../pair.dart';
 import 'cached_media_file.dart';
 
@@ -39,13 +38,15 @@ class MediaCacheServer {
     final server = await HttpServer.bind(_kLocalProxyHost, 10090, shared: true);
     _serverSubscription = server.listen((request) {
       _handleHttpRequest(request).catchError((error, stacktrace) {
-        e('MediaCacheServer: handle http request error $error $stacktrace');
+        logger.e(
+            'MediaCacheServer: handle http request error $error $stacktrace');
       });
     });
   }
 
   Future<void> _handleHttpRequest(HttpRequest request) async {
-    d('MediaCacheServer#_handleHttpRequest: ${request.uri.pathSegments}');
+    logger
+        .d('MediaCacheServer#_handleHttpRequest: ${request.uri.pathSegments}');
     final filename = request.uri.pathSegments.first;
     final cacheFile = _cacheFiles[filename];
     if (cacheFile == null) {

@@ -8,10 +8,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mixin_logger/mixin_logger.dart';
 import 'package:path/path.dart' as p;
 
 import '../../repository/app_dir.dart';
+import '../log.dart';
 import 'key_value_cache.dart';
 
 @immutable
@@ -83,7 +83,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
       );
     }
 
-    d('load image from network: $url $id');
+    logger.d('load image from network: $url $id');
 
     if (key.url.isEmpty) {
       throw Exception('image url is empty.');
@@ -174,7 +174,8 @@ void registerImageCacheProvider() {
   }
   _receiverPort.listen((message) async {
     if (message is IsolateImageCacheLoader) {
-      d('IsolateImageCacheLoader: ${message.imageUrl} ${Isolate.current.debugName}');
+      logger.d(
+          'IsolateImageCacheLoader: ${message.imageUrl} ${Isolate.current.debugName}');
       final image = ResizeImage(
         CachedImage(message.imageUrl),
         width: 200,
@@ -211,7 +212,7 @@ void registerImageCacheProvider() {
             completer.complete(null);
           }
           stream.removeListener(listener!);
-          e('failed to load image: $exception $stackTrace');
+          logger.e('failed to load image: $exception $stackTrace');
         },
       );
       stream.addListener(listener);
@@ -233,7 +234,8 @@ Future<Uint8List?> loadImageFromOtherIsolate(String? imageUrl) async {
     _kImageCacheLoaderPortName,
   );
   if (imageCachePort == null) {
-    e('can not get imageCachePort in isolate: ${Isolate.current.debugName}');
+    logger.e(
+        'can not get imageCachePort in isolate: ${Isolate.current.debugName}');
     return null;
   }
   final receivePort = ReceivePort();

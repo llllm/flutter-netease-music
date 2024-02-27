@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:mixin_logger/mixin_logger.dart';
 
 import '../db/enum/key_value_group.dart';
 import '../repository/data/playlist_detail.dart';
@@ -10,6 +9,7 @@ import '../repository/data/track.dart';
 import '../repository/netease.dart';
 import '../repository/network_repository.dart';
 import '../utils/db/db_key_value.dart';
+import '../utils/log.dart';
 import 'database_provider.dart';
 import 'key_value/account_provider.dart';
 
@@ -89,13 +89,14 @@ class PlaylistDetailStateNotifier
           trackIds.remove(track.id);
         }
         if (trackIds.isEmpty) {
-          e('trackIds is empty. but trackCount is not. ${data.trackCount} ${data.tracks.length}');
+          logger.e(
+              'trackIds is empty. but trackCount is not. ${data.trackCount} ${data.tracks.length}');
         }
         final musics = await neteaseRepository!.songDetails(data.trackIds);
         if (musics.isValue) {
           data = data.copyWith(tracks: musics.asValue!.value);
         } else {
-          e('load playlist detail failed. ${musics.asError!.error}');
+          logger.e('load playlist detail failed. ${musics.asError!.error}');
         }
       }
       _playlistDetail = data;
@@ -123,7 +124,7 @@ class PlaylistDetailStateNotifier
     final tracksToAdd = tracks.where((e) => !existed.contains(e.id)).toList();
 
     if (tracksToAdd.isEmpty) {
-      d('tracksToAdd is empty');
+      logger.d('tracksToAdd is empty');
       return;
     }
 

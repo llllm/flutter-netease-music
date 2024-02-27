@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:mixin_logger/mixin_logger.dart';
 
 import '../../db/dao/key_value_dao.dart';
 import '../../db/enum/key_value_group.dart';
+import '../log.dart';
 
 class BaseLazyDbKeyValue {
   BaseLazyDbKeyValue({
@@ -51,7 +51,7 @@ class BaseLazyDbKeyValue {
       final map = jsonDecode(value) as Map;
       return map.cast<K, V>();
     } catch (error, stacktrace) {
-      e('getMap $key error: $error, $stacktrace');
+      logger.e('getMap $key error: $error, $stacktrace');
       return null;
     }
   }
@@ -65,7 +65,7 @@ class BaseLazyDbKeyValue {
       final list = jsonDecode(value) as List;
       return list.cast<T>();
     } catch (error, stacktrace) {
-      e('getList $key error: $error, $stacktrace');
+      logger.e('getList $key error: $error, $stacktrace');
       return null;
     }
   }
@@ -158,7 +158,7 @@ T? convertToType<T>(String? value) {
         throw ArgumentError('unsupported type $T');
     }
   } catch (error, stacktrace) {
-    e('failed to convert $value to type $T : $error, \n$stacktrace');
+    logger.e('failed to convert $value to type $T : $error, \n$stacktrace');
     return null;
   }
 }

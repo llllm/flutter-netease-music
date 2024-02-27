@@ -5,9 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:mixin_logger/mixin_logger.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:path/path.dart' as p;
 import 'package:window_manager/window_manager.dart';
 
 import 'media/tracks/tracks_player_impl_mobile.dart';
@@ -19,6 +17,7 @@ import 'repository.dart';
 import 'repository/app_dir.dart';
 import 'utils/cache/cached_image.dart';
 import 'utils/callback_window_listener.dart';
+import 'utils/log.dart';
 import 'utils/platform_configuration.dart';
 import 'utils/system/system_fonts.dart';
 
@@ -27,11 +26,10 @@ void main() async {
   await loadFallbackFonts();
   await NetworkRepository.initialize();
   await initAppDir();
-  initLogger(p.join(appDir.path, 'logs'));
   registerImageCacheProvider();
-  FlutterError.onError = (details) => e('flutter error: $details');
+  FlutterError.onError = (details) => logger.e('flutter error: $details');
   PlatformDispatcher.instance.onError = (error, stacktrace) {
-    e('uncaught error: $error $stacktrace');
+    logger.e('uncaught error: $error $stacktrace');
     return true;
   };
   runApp(

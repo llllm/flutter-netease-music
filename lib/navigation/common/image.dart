@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mixin_logger/mixin_logger.dart';
 
 import '../../utils/cache/cached_image.dart';
+import '../../utils/log.dart';
 
 class AppImage extends StatelessWidget {
   const AppImage({
@@ -63,7 +63,7 @@ class AppImage extends StatelessWidget {
             ),
           );
         }
-        e('size is not finite: $size ${StackTrace.current}');
+        logger.e('size is not finite: $size ${StackTrace.current}');
         return buildImage(image);
       },
     );

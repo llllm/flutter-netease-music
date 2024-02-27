@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mixin_logger/mixin_logger.dart';
 
 import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
@@ -13,6 +12,7 @@ import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/repository_provider.dart';
 import '../../../repository.dart';
+import '../../../utils/log.dart';
 import '../navigation_target.dart';
 
 enum PlayResult {
@@ -175,7 +175,7 @@ class TrackTileContainer extends ConsumerStatefulWidget {
               rawPlaylistId: playlist.id,
             );
           } catch (error, stacktrace) {
-            e('error: $error, $stacktrace');
+            logger.e('error: $error, $stacktrace');
             return PlayResult.fail;
           }
         } else {

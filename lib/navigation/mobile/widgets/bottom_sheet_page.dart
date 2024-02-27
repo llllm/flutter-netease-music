@@ -3,7 +3,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:mixin_logger/mixin_logger.dart';
+
+import '../../../utils/log.dart';
 
 class BottomSheetPage extends Page<void> {
   const BottomSheetPage({
@@ -29,7 +30,7 @@ class BottomSheetPage extends Page<void> {
         var widget = child;
 
         if (isScrollControlled) {
-          d('isScrollControlled: $isScrollControlled');
+          logger.d('isScrollControlled: $isScrollControlled');
           widget = Column(
             children: [
               const SizedBox(height: 200),

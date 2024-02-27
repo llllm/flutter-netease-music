@@ -2,7 +2,6 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart' hide ExpansionPanel, ExpansionPanelList;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mixin_logger/mixin_logger.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
@@ -14,6 +13,7 @@ import '../../../providers/player_provider.dart';
 import '../../../providers/playlist/user_playlists_provider.dart';
 import '../../../providers/repository_provider.dart';
 import '../../../repository/data/playlist_detail.dart';
+import '../../../utils/log.dart';
 import '../../common/buttons.dart';
 import '../../common/navigation_target.dart';
 import '../widgets/expansion_panel.dart';
@@ -219,7 +219,7 @@ class _UserPlaylistItem extends ConsumerWidget {
                       .read(neteaseRepositoryProvider)
                       .playModeIntelligenceList(id: 1, playlistId: playlist.id);
                   if (list.isEmpty) {
-                    e('playlist intelligence list is null');
+                    logger.e('playlist intelligence list is null');
                     return;
                   }
                   player.setRepeatMode(RepeatMode.heart);
@@ -233,7 +233,7 @@ class _UserPlaylistItem extends ConsumerWidget {
                   );
                   await player.playFromMediaId(list.first.id);
                 } catch (error, stacktrace) {
-                  e('error: $error, stacktrace: $stacktrace');
+                  logger.e('error: $error, stacktrace: $stacktrace');
                   toast(context.formattedError(error));
                 }
               },

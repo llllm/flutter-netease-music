@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mixin_logger/mixin_logger.dart';
 
 import '../db/enum/key_value_group.dart';
 import '../repository.dart';
 import '../utils/db/db_key_value.dart';
+import '../utils/log.dart';
 import 'database_provider.dart';
 
 final _userKeyValueProvider = Provider(
@@ -36,7 +36,7 @@ final userDetailProvider = StreamProvider.family<User, int>(
         yield cache;
       }
     } catch (error, stack) {
-      e('$error, $stack');
+      logger.e('$error, $stack');
     }
     final result = await neteaseRepository!.getUserDetail(userId);
     final user = await result.asFuture;

@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:mixin_logger/mixin_logger.dart';
 import 'package:path/path.dart' as p;
+
+import '../log.dart';
 
 abstract class CacheKey {
   factory CacheKey.fromString(String key) {
@@ -88,7 +89,7 @@ Future<void> _fileLru(Map<String, dynamic> params) async {
     try {
       return a.lastModifiedSync().compareTo(b.lastModifiedSync());
     } catch (error, stacktrace) {
-      e('_fileLru: error: $error, stacktrace: $stacktrace');
+      logger.e('_fileLru: error: $error, stacktrace: $stacktrace');
       return 0;
     }
   });

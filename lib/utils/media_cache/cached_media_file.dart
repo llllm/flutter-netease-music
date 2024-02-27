@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
-
-import 'package:mixin_logger/mixin_logger.dart';
 import 'package:path/path.dart' as p;
 import 'package:synchronized/extension.dart';
+
+import '../log.dart';
 
 const _downloadingSuffix = '.downloading';
 
@@ -67,7 +67,7 @@ class CachedMediaFile {
       }
     } else if (response.statusCode != HttpStatus.ok) {
       if (response.statusCode == HttpStatus.requestedRangeNotSatisfiable) {
-        e('requestedRangeNotSatisfiable: $url . retry download');
+        logger.e('requestedRangeNotSatisfiable: $url . retry download');
         tempFile.deleteSync();
         unawaited(_startDownload(tempFile));
         return;
@@ -89,7 +89,7 @@ class CachedMediaFile {
         await raf.writeFrom(chunk);
       });
     }
-    d('Download completed1 $url');
+    logger.d('Download completed1 $url');
     await synchronized(() async {
       await raf.close();
       final completedFile = File(p.join(cacheDir, cacheFileName));
@@ -97,11 +97,11 @@ class CachedMediaFile {
       _file = completedFile;
       _completed = true;
     });
-    d('Download completed $url');
+    logger.d('Download completed $url');
   }
 
   Stream<List<int>> stream(int start, int end) {
-    d('open stream ($start,$end) , $_completed  ${_file.path}');
+    logger.d('open stream ($start,$end) , $_completed  ${_file.path}');
     if (_completed) {
       return _file.openRead(start, end);
     }

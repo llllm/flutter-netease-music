@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:mixin_logger/mixin_logger.dart';
 import 'package:music_player/music_player.dart';
 
 import '../../model/persistence_player_state.dart';
 import '../../repository.dart';
 import '../../utils/cache/cached_image.dart';
+import '../../utils/log.dart';
 import '../../utils/media_cache/media_cache.dart';
 import 'track_list.dart';
 import 'tracks_player.dart';
@@ -259,7 +259,7 @@ class TracksPlayerImplMobile extends TracksPlayer {
   Future<void> restoreFromPersistence(PersistencePlayerState state) async {
     final isServiceRunning = await _player.isMusicServiceAvailable();
     if (isServiceRunning) {
-      d('service running, skip restore');
+      logger.d('service running, skip restore');
       return;
     }
     await _player.setPlayQueue(state.playingList.toPlayQueue());
@@ -285,7 +285,7 @@ Future<String> _playUriInterceptor(String? mediaId, String? fallbackUri) async {
   final result = await neteaseRepository!.getPlayUrl(trackId);
 
   if (result.isError) {
-    e('get play url error: ${result.asError!.error}');
+    logger.e('get play url error: ${result.asError!.error}');
   }
 
   final url = result.isError
@@ -295,17 +295,17 @@ Future<String> _playUriInterceptor(String? mediaId, String? fallbackUri) async {
     return '';
   }
   final proxyUrl = await generateTrackProxyUrl(trackId, url);
-  d('play url: $proxyUrl');
+  logger.d('play url: $proxyUrl');
   return proxyUrl;
 }
 
 Future<Uint8List> _loadImageInterceptor(MusicMetadata metadata) async {
   final result = await loadImageFromOtherIsolate(metadata.iconUri);
   if (result == null) {
-    e('load image error: ${metadata.iconUri}');
+    logger.e('load image error: ${metadata.iconUri}');
     throw Exception('load image error');
   }
-  d('load image complete ${metadata.iconUri} ${result.length}');
+  logger.d('load image complete ${metadata.iconUri} ${result.length}');
   return result;
 }
 
